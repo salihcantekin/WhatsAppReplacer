@@ -9,9 +9,10 @@ namespace WhatsAppReplacer
         {
             Add(Keys.D);
             Add(Keys.D9);
-            Add(Keys.OemPeriod);
-            Add(Keys.LShiftKey);
-            Add(Keys.RShiftKey);
+            //Add(Keys.OemPeriod);
+            Add(Keys.RShiftKey | Keys.OemPeriod);
+            //Add(Keys.LShiftKey);
+            //Add(Keys.RShiftKey);
         }
 
         private static ListeningKeys current;
