@@ -21,9 +21,11 @@ namespace WhatsAppReplacer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            globalKeyboardHook gkh;
+            HookManager.SubscribeToWindowEvents();
+            HookManager.OnActiveAppChanged += HookManager_OnActiveAppChanged;
 
-            gkh = new globalKeyboardHook();
+            globalKeyboardHook gkh = new globalKeyboardHook();
+            
             gkh.HookedKeys.Add(Keys.D);
             gkh.HookedKeys.Add(Keys.D9);
             
@@ -34,6 +36,11 @@ namespace WhatsAppReplacer
             gkh.KeyUp += Gkh_KeyUp;
 
             Task.Factory.StartNew(new Action(() => EventLoop.Run()));
+        }
+
+        private void HookManager_OnActiveAppChanged(object sender, string e)
+        {
+            this.Text = e;
         }
 
         private void Gkh_KeyUp(object sender, KeyEventArgs e)
