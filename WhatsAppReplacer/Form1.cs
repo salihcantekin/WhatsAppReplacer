@@ -10,57 +10,51 @@ using System.Windows.Forms;
 
 namespace WhatsAppReplacer
 {
-    public partial class Form1 : Form
+    public partial class frmMainReplacer : Form
     {
-        public Form1()
+        public frmMainReplacer()
         {
             InitializeComponent();
         }
+
+        globalKeyboardHook keyboardHook;
 
         private bool pressed = false;
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            lblActive.Text = "";
             HookManager.SubscribeToWindowEvents();
             HookManager.OnActiveAppChanged += HookManager_OnActiveAppChanged;
-
-            globalKeyboardHook gkh = new globalKeyboardHook();
-            
-            gkh.HookedKeys.Add(Keys.D);
-            gkh.HookedKeys.Add(Keys.D9);
-            
-            gkh.HookedKeys.Add(Keys.OemPeriod);
-            gkh.HookedKeys.Add(Keys.LShiftKey);
-            gkh.HookedKeys.Add(Keys.RShiftKey);
-            //gkh.KeyDown += Gkh_KeyDown;
-            gkh.KeyUp += Gkh_KeyUp;
-
-            Task.Factory.StartNew(new Action(() => EventLoop.Run()));
         }
 
         private void HookManager_OnActiveAppChanged(object sender, string e)
         {
-            this.Text = e;
+            if (e.ToLower().Equals("whatsapp"))
+            {
+                keyboardHook = new globalKeyboardHook();
+                keyboardHook.HookedKeys = ListeningKeys.Current;
+                keyboardHook.KeyUp += Gkh_KeyUp;
+            }
+            else
+                keyboardHook = null;
+
+            lblActive.Text = e;
         }
 
         private void Gkh_KeyUp(object sender, KeyEventArgs e)
         {
-            //if (HookManager.activeAppName.Equals("whatsapp"))
+            if (pressed && (e.KeyCode == Keys.D || e.KeyCode == Keys.D9))
             {
-                if (pressed && (e.KeyCode == Keys.D || e.KeyCode == Keys.D9))
-                {
-                    SendKeys.SendWait("{BACKSPACE}");
-                    SendKeys.SendWait("{BACKSPACE}");
-                    //SendKeys.SendWait("😎");
-                    SendKeys.SendWait("😂");
-                }
-
-                if (pressed && e.KeyCode == Keys.RShiftKey) { }
-                else
-                    pressed = e.KeyCode == Keys.OemPeriod | e.KeyCode == Keys.RShiftKey;
-
-                Console.WriteLine("Pressed: " + pressed);
+                SendKeys.SendWait("{BACKSPACE}");
+                SendKeys.SendWait("{BACKSPACE}");
+                //SendKeys.SendWait("😎");
+                SendKeys.SendWait("😂");
             }
+
+            if (pressed && e.KeyCode == Keys.RShiftKey) { }
+            else
+                pressed = e.KeyCode == Keys.OemPeriod | (e.KeyCode == Keys.RShiftKey || e.KeyCode == Keys.LShiftKey);
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -80,7 +74,7 @@ namespace WhatsAppReplacer
             }
         }
 
-        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void NotifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             notifyIcon1.Visible = false;
             Show();

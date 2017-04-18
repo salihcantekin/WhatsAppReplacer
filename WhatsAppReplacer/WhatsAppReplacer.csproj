@@ -53,6 +53,7 @@
     </Compile>
     <Compile Include="globalKeyboardHook.cs" />
     <Compile Include="HookManager.cs" />
+    <Compile Include="ListeningKeys.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
