@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WhatsAppReplacer
 {
-    public class OnHandleValueEventArgs: EventArgs
+    public class OnHandleValueEventArgs : EventArgs
     {
         public char Prefix { get; set; }
 
@@ -19,6 +19,10 @@ namespace WhatsAppReplacer
             this.Prefix = Prefix;
             this.Value = Value;
         }
-                
+
+        public override string ToString()
+        {
+            return $"Prefix: {Prefix}, Value: {Value}";
+        }
     }
 }

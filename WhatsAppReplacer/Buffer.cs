@@ -36,20 +36,24 @@ namespace WhatsAppReplacer
         {
             if (!IsWatching)
             {
-                if (KeyMap.Current.ContainsKey(Value))
+                if (MapList.Current.Contains(Value))
                 {
                     lastPrefix = Value;
-                    handleValueList = KeyMap.Current.GetValue(Value);
+                    handleValueList = MapList.Current.GetValues(Value);
                     StartWatching();
                 }
             }
             else
             {
-                if (handleValueList?.IndexOf(Value) > -1)
+                if (handleValueList != null)
                 {
-                    Console.WriteLine("OnHandle?.Invoke");
-                    OnHandle?.Invoke(this, new OnHandleValueEventArgs(lastPrefix, Value));
-                    lastPrefix = '\0';
+                    int Index = handleValueList.IndexOf(Value);
+                    if (Index > -1)
+                    {
+                        Console.WriteLine("OnHandle?.Invoke");
+                        OnHandle?.Invoke(this, new OnHandleValueEventArgs(lastPrefix, Value));
+                        lastPrefix = '\0';
+                    }
                 }
                 StopWatching();
             }

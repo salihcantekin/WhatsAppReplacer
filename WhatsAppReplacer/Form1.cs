@@ -20,33 +20,30 @@ namespace WhatsAppReplacer
             buffer = new Buffer();
             buffer.OnHandle += Buffer_OnHandle;
 
-
-            KeyMap.Current.Add(':', ')', "😂");
-            KeyMap.Current.Add(':', 'D', "😂");
-            KeyMap.Current.Add(':', 'd', "😂");
-            KeyMap.Current.Add(';', ')', "😂");
+            //MapList.Current.Add(':', ')', "😊");
+            MapList.Current.Add(':', ')', "gulucuk");
+            //MapList.Current.Add(':', 'D', "😂");
+            //MapList.Current.Add(':', 'd', "😂");
+            //MapList.Current.Add(';', ')', "😉");
         }
 
         private void Buffer_OnHandle(object sender, OnHandleValueEventArgs e)
         {
+            Console.WriteLine("Buffer_OnHandle." + e.ToString());
             for (int i = 0; i < e.Length; i++)
                 SendKeys.SendWait("{BACKSPACE}");
 
-            String willSendValue = KeyMap.Current.GetSymbol(e.Prefix);
+            String willSendValue = MapList.Current.GetSymbol(e.Prefix, e.Value);
             Console.WriteLine("willSendValue: " + willSendValue);
-            SendKeys.SendWait("SALIH");
+            SendKeys.SendWait(willSendValue);
         }
 
-
-
-        //globalKeyboardHook keyboardHook;
         KeyboardHook keyboardHook;
 
         private bool pressed = false;
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
             lblActive.Text = "";
             HookManager.SubscribeToWindowEvents();
             HookManager.OnActiveAppChanged += HookManager_OnActiveAppChanged;
@@ -54,16 +51,12 @@ namespace WhatsAppReplacer
 
         private void HookManager_OnActiveAppChanged(object sender, string e)
         {
-            if (e.ToLower().Equals("notepad"))
+            if (e.ToLower().Equals("whatsapp"))
             {
                 keyboardHook = new KeyboardHook(true);
                 keyboardHook.KeyUp += KeyboardHook_KeyUp;
 
                 lblStatus.Text = "Listening Started";
-
-                //keyboardHook = new globalKeyboardHook();
-                //keyboardHook.HookedKeys = ListeningKeys.Current;
-                //keyboardHook.KeyUp += Gkh_KeyUp;
             }
             else
             {
@@ -79,41 +72,32 @@ namespace WhatsAppReplacer
             if (key == Keys.RShiftKey || key == Keys.LShiftKey)
                 return;
 
-            buffer.Add(ConverToString(key));
+            buffer.Add(ConverToString(key, Shift));
 
-
-
-            //if (pressed && (key == Keys.D || key == Keys.D9))
-            //{
-            //    SendKeys.SendWait("{BACKSPACE}");
-            //    SendKeys.SendWait("{BACKSPACE}");
-            //    //SendKeys.SendWait("😎");
-            //    SendKeys.SendWait("😂");
-            //}
-
-            //if (pressed && key == Keys.RShiftKey) { }
-            //else
-            //    pressed = key == Keys.OemPeriod | (key == Keys.RShiftKey || key == Keys.LShiftKey);
-
-            Console.WriteLine(ConverToString(key));
+            Console.WriteLine(ConverToString(key, Shift));
         }
 
-        public string ConverToString(Keys Keys)
+        public string ConverToString(Keys Keys, bool Shift = false)
         {
-            string name;
-            switch (Keys)
+            Console.WriteLine(Keys.ToString());
+            string name = String.Empty;
+
+            if (Shift)
             {
-                case Keys.OemPeriod | Keys.LShiftKey:
-                case Keys.OemPeriod | Keys.RShiftKey:
+                if (Keys == (Keys.D9))
+                    name = ")";
+                else
+                if (Keys == (Keys.D8))
+                    name = "(";
+                else if (Keys == (Keys.OemPeriod))
                     name = ":";
-                    break;
-                case Keys.Oemcomma:
-                    name = "Comma";
-                    break;
-                default:
-                    name = (new KeysConverter()).ConvertToString(Keys);
-                    break;
+                else if (Keys == (Keys.Oemcomma))
+                    name = ";";
+                else if (Keys == (Keys.OemQuestion))
+                    name = "*";
             }
+            else
+                name = (new KeysConverter()).ConvertToString(Keys);
 
             return name;
         }

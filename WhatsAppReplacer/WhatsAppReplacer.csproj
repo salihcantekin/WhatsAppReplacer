@@ -55,8 +55,8 @@
     <Compile Include="globalKeyboardHook.cs" />
     <Compile Include="HookManager.cs" />
     <Compile Include="KeyboardHook.cs" />
-    <Compile Include="KeyMap.cs" />
-    <Compile Include="ListeningKeys.cs" />
+    <Compile Include="Map.cs" />
+    <Compile Include="MapList.cs" />
     <Compile Include="OnHandleValueEventArgs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
